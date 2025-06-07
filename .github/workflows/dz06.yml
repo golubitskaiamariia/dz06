@@ -37,6 +37,8 @@ jobs:
       run: |
         cpack -G "DEB"
         cpack -G "RPM"
+        cpack -G "ZIP"
+        cpack -G "TGZ"
         
     - name: Create window package
       working-directory: ${{github.workspace}}/build
@@ -57,6 +59,8 @@ jobs:
           path: |
             build/*.deb
             build/*.rpm
+            build/*.zip
+            build/*.tar.gz
 
     - name: Upload window artifact
       uses: actions/upload-artifact@v4
@@ -64,7 +68,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       with:
           name: ${{ matrix.os }}-dz06-pack
-          path: build/*.wix
+          path: build/*.msi
 
     - name: Upload macos artifact
       uses: actions/upload-artifact@v4
@@ -74,3 +78,40 @@ jobs:
           name: ${{ matrix.os }}-dz06-pack
           path: build/*.dmg
 
+create_release:
+    needs: work
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: download_ubuntu
+      uses: actions/download-artifact@v4
+      with:
+        name: ubuntu-latest-dz06-pack
+        path: artifacts/linux
+
+    - name: download_windows
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-latest-dz06-pack
+        path: artifacts/windows
+
+    - name: download_macos
+      uses: actions/download-artifact@v4 
+      with:
+        name: macos-latest-dz06-pack
+        path: artifacts/macos
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v1.${{ github.run_number }}
+        name: Release v1.${{ github.run_number }}
+        files: |
+          artifacts/linux/*.deb
+          artifacts/linux/*.rpm
+          artifacts/linux/*.zip
+          artifacts/linux/*.tar.gz
+          artifacts/windows/*.msi
+          artifacts/macos/*.dmg
