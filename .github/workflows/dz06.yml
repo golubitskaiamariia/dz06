@@ -47,3 +47,30 @@ jobs:
       working-directory: ${{github.workspace}}/build
       if: matrix.os == 'macos-latest'
       run: cpack -G "DragNDrop"
+
+    - name: Upload ubuntu artifact
+      uses: actions/upload-artifact@v4
+      
+      if: matrix.os == 'ubuntu-latest'
+      with:
+          name: ${{ matrix.os }}-dz06-pack
+          path: |
+            build/*.deb
+            build/*.rpm
+
+    - name: Upload window artifact
+      uses: actions/upload-artifact@v4
+
+      if: matrix.os == 'window-latest'
+      with:
+          name: ${{ matrix.os }}-dz06-pack
+          path: build/*.wix
+
+    - name: Upload macos artifact
+      uses: actions/upload-artifact@v4
+
+      if: matrix.os == 'macos-latest'
+      with:
+          name: ${{ matrix.os }}-dz06-pack
+          path: build/*.dmg
+
