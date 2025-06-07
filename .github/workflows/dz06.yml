@@ -40,7 +40,7 @@ jobs:
         
     - name: Create window package
       working-directory: ${{github.workspace}}/build
-      if: matrix.os == 'window-latest'
+      if: matrix.os == 'windows-latest'
       run: cpack -G "WIX"
 
     - name: Create macos package
@@ -61,7 +61,7 @@ jobs:
     - name: Upload window artifact
       uses: actions/upload-artifact@v4
 
-      if: matrix.os == 'window-latest'
+      if: matrix.os == 'windows-latest'
       with:
           name: ${{ matrix.os }}-dz06-pack
           path: build/*.wix
