@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  work:
+  build:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -79,7 +79,7 @@ jobs:
           path: build/*.dmg
 
   create_release:
-    needs: work
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
