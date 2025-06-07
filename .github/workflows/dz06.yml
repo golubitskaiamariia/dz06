@@ -78,7 +78,7 @@ jobs:
           name: ${{ matrix.os }}-dz06-pack
           path: build/*.dmg
 
-create_release:
+  create_release:
     needs: work
     runs-on: ubuntu-latest
 
